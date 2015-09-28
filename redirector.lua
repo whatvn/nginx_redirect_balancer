@@ -39,5 +39,5 @@ for _, u in ipairs(us) do
         end
     end
     local server = random_weight(us_table)
-    ngx.redirect("http://".. server, 301)
+    ngx.redirect("http://".. server..ngx.var.uri.."?"..ngx.var.args, 302)
 end
