@@ -1,3 +1,5 @@
+--modify local my_upstream variable to use right upstream
+local my_upstream = "google"
 local concat = table.concat
 local upstream = require "ngx.upstream"
 local get_servers = upstream.get_servers
@@ -29,15 +31,19 @@ function get_server_from_upstream(tbl)
 end
 
 for _, u in ipairs(us) do
-    local srvs, err = get_servers(u)
-    local us_table = {}
-    if not srvs then
-        ngx.say("failed to get servers in upstream ", u)
+    if u == my_upstream then
+    	local srvs, err = get_servers(u)
+    	local us_table = {}
+    	if not srvs then
+            ngx.say("failed to get servers in upstream ", u)
+    	else
+       	    for _, srv in ipairs(srvs) do
+            	us_table[srv["addr"]] = srv["weight"]
+            end
+    	end
+    	local server = random_weight(us_table)
+    	ngx.redirect("http://".. server..ngx.var.uri.."?"..ngx.var.args, 302)
     else
-        for _, srv in ipairs(srvs) do
-            us_table[srv["addr"]] = srv["weight"]
-        end
+	ngx.say(ngx.HTTP_FORBIDDEN)
     end
-    local server = random_weight(us_table)
-    ngx.redirect("http://".. server..ngx.var.uri.."?"..ngx.var.args, 302)
 end
