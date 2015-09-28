@@ -33,5 +33,5 @@ An attempt to implement redirector inside nginx which works similar to [py-balan
 That's it. 
 When pointing your browser to http://localhost/ , you will be redirect to http://192.168.10.226 or http://192.168.10.225 based on weight configured in upstream block. 
 
-Status: only redirect, not yet working with path and query string
+Status: only work with one upstream and location block  
 
