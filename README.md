@@ -29,9 +29,9 @@ An attempt to implement redirector inside nginx which works similar to [py-balan
         server_name  localhost;
 	location / {
 	    # "google" is the name of your upstream configuration.
-	    set $upstream "google"
+	    set $upstream "google";
             set_by_lua_file $res path/to/redirector.lua $upstream;
-	    return 302 $res
+	    return 302 $res;
         }
 
   } 
