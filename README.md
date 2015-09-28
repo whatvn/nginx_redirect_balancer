@@ -6,7 +6,11 @@ An attempt to implement redirector inside nginx which works similar to [py-balan
 
 # Usage
 
-1. Install nginx with lua-nginx-module and lua-upstream-module 
+1. Install nginx with lua-nginx-module and lua-upstream-module, and ngx_devel_kit  
+
+``` bash
+	./configure --with-ld-opt=-Wl,-rpath,/usr/local/lib --add-module=lua-nginx-module --add-module=lua-upstream-nginx-module --add-module=ngx_devel_kit
+```
 
 2. Config your nginx likes this:
 
@@ -24,7 +28,10 @@ An attempt to implement redirector inside nginx which works similar to [py-balan
         listen       80;
         server_name  localhost;
 	location / {
-            content_by_lua_file path/to/redirect.lua;
+	    # "google" is the name of your upstream configuration.
+	    set $upstream "google"
+            set_by_lua_file $res path/to/redirector.lua $upstream;
+	    return 302 $res
         }
 
   } 
@@ -33,5 +40,5 @@ An attempt to implement redirector inside nginx which works similar to [py-balan
 That's it. 
 When pointing your browser to http://localhost/ , you will be redirect to http://192.168.10.226 or http://192.168.10.225 based on weight configured in upstream block. 
 
-Status: only work with one upstream and location block  
+Status: work with upstream using IP address. Nginx does resolve upstream nginx domain name to its IP address, so this method will not work. 
 
