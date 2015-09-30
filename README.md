@@ -19,6 +19,7 @@ An attempt to implement redirector inside nginx which works similar to [py-balan
  upstream google {
         server 192.168.10.226 weight=5;
         server 192.168.10.225 weight=1;
+	server google.com weight=10;
  } 
 
  ...
@@ -38,7 +39,7 @@ An attempt to implement redirector inside nginx which works similar to [py-balan
 ```
 
 That's it. 
-When pointing your browser to http://localhost/ , you will be redirect to http://192.168.10.226 or http://192.168.10.225 based on weight configured in upstream block. 
+When pointing your browser to http://localhost/ , you will be redirect to http://192.168.10.226 or http://192.168.10.225 or http://google.com/ based on weight configured in upstream block, if request contains additional uri or query strings, those things will be pass to redirect url too. 
 
-Status: work with upstream using IP address. Nginx does resolve upstream nginx domain name to its IP address, so this method will not work. 
+Status: everything is working now with [help-of-agentzh](https://github.com/openresty/lua-upstream-nginx-module/issues/15)  
 
