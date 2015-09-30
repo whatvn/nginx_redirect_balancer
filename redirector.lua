@@ -29,15 +29,15 @@ for _, u in ipairs(us) do
             ngx.say("failed to get servers in upstream ", u)
     	else
     	    for _, srv in ipairs(srvs) do
-            	us_table[srv["addr"]] = srv["weight"]
+            	us_table[srv["name"]] = srv["weight"]
     	    end
     	end
-    	local server = random_weight(us_table)
+    	local destination = random_weight(us_table)
     	--ngx.redirect("http://".. server..ngx.var.uri.."?"..ngx.var.args, 302)
     	if not ngx.var.args or ngx.var.args == '' then
-    	    return "http://".. server..ngx.var.uri
+    	    return "http://"..destination..ngx.var.uri
         end
-	return "http://".. server..ngx.var.uri.."?"..ngx.var.args
+	return "http://"..destination..ngx.var.uri.."?"..ngx.var.args
     end
 end
 
